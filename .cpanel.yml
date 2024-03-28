@@ -1,0 +1,16 @@
+---
+deployment:
+  tasks:
+    # This line sets the path where your files will be deployed on the server (public_html by default)
+    - export DEPLOYPATH=/home/tryonedigital/public_html  # Replace USER with your actual cPanel username
+
+    # Set the repository path (already set in your screenshot)
+    - export REPOPATH=/home/tryonedigital/repositories/DDA
+
+    # Sync your repository files to the deployment path, excluding the .git folder
+    - /bin/rsync -aP --exclude '.git' --exclude '.well-known' ${REPOPATH} ${DEPLOYPATH} --delete-after
+
+    # Set permissions for the deployed files and folders (optional)
+    - /bin/chmod 755 ${DEPLOYPATH}
+    - /bin/find ${DEPLOYPATH} -type d -exec /bin/chmod 755 '{}' \;
+    - /bin/find ${DEPLOYPATH} -type f -exec /bin/chmod 644 '{}' \;
